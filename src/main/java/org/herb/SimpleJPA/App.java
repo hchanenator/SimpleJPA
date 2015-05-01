@@ -1,7 +1,14 @@
 package org.herb.SimpleJPA;
 
+import javax.annotation.PostConstruct;
+
 import org.herb.SimpleJPA.domain.Customer;
+import org.herb.SimpleJPA.domain.Player;
 import org.herb.SimpleJPA.persistence.CustomerRepository;
+import org.herb.SimpleJPA.persistence.PlayerRepository;
+import org.herb.SimpleJPA.util.DataLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,8 +21,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class App implements CommandLineRunner 
 {
+	private final static Logger logger = LoggerFactory.getLogger(App.class);
+	
 	@Autowired
 	CustomerRepository repository;
+	
+	@Autowired
+	DataLoader dataLoader;
+	
+	@Autowired
+	PlayerRepository playerRepository;
 	
     public static void main( String[] args )
     {
@@ -53,4 +68,11 @@ public class App implements CommandLineRunner
             System.out.println(bauer);
 		}
 	}
+    
+    @PostConstruct
+    void listPlayers() {
+    	for (Player player : playerRepository.findAll()) {
+    		logger.info(player.toString());
+    	}
+    }
 }
